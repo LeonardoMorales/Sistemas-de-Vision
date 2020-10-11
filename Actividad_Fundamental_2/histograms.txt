@@ -1,0 +1,72 @@
+// "Actividad Fundamental 2"
+
+// Deberá implementar un algoritmo que 
+// obtenga los un histogramas de 
+// al menos dos imágenes (RGB y ByN) 
+// y comparar las diferencias.
+
+  if (bitDepth!=24) {
+    setBatchMode(true);
+    id1 = getImageID();
+    setRGBWeights(1,0,0);
+    run("Histogram");
+    width=getWidth(); height=getHeight();
+    run("Copy");
+    close();
+    newImage("Histogram of "+getTitle, "8-bit", width, height, 1);
+    id2 = getImageID();
+    run("Paste");
+    setMetadata("Black/White");
+    run("Select None");
+    setBatchMode(false);
+    print("Imagen ByN");
+  } else {
+    setBatchMode(true);
+    
+    /*
+      SLICE 1
+    */
+    id1 = getImageID();
+    setRGBWeights(1,0,0);
+    run("Histogram");
+    width=getWidth(); height=getHeight();
+    run("Copy");
+    close();
+    newImage("Histogram of "+getTitle, "8-bit", width, height, 3);
+    id2 = getImageID();
+    run("Paste");
+    setMetadata("Red");
+
+    /*
+      SLICE 2
+    */
+    selectImage(id1);
+    setRGBWeights(0,1,0);
+    run("Histogram");
+    run("Copy");
+    close();
+    selectImage(id2);
+    setSlice(2);
+    run("Paste");
+    setMetadata("Green");
+
+    /*
+      SLICE 3
+    */
+    selectImage(id1);
+    setRGBWeights(0,0,1);
+    run("Histogram");
+    run("Copy");
+    close();
+    selectImage(id2);
+    setSlice(3);
+    run("Paste");
+    setMetadata("Blue");
+
+    // Iniciar pantalla mostrando el primer slice
+    setSlice(1);
+    run("Select None");
+
+    setBatchMode(false);
+    print("Imagen RGB");
+  }
